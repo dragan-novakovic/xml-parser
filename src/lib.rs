@@ -1,15 +1,19 @@
 mod models;
-use quick_xml::{de, DeError};
+use quick_xml::de;
 use serde_json;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub fn parse_xml(xml: &str, project_type: i32) -> String {
-    let deserialized_model = match project_type {
-        1 => de::from_str::<models::uwp::Project>(xml),
-        _ => Err(DeError::Custom("Unknown Project type".to_string())),
+    match project_type {
+        1 => {
+            let model = de::from_str::<models::uwp::Project>(xml).unwrap();
+            return serde_json::to_string(&model).unwrap();
+        }
+        2 => {
+            let model = de::from_str::<models::maui::Project>(xml).unwrap();
+            return serde_json::to_string(&model).unwrap();
+        }
+        _ => return "Unknown Project type".to_string(),
     };
-
-    let result = serde_json::to_string(&deserialized_model.unwrap()).unwrap();
-    result
 }

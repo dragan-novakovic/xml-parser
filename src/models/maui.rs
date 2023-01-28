@@ -10,7 +10,7 @@ pub struct Project {
 pub enum Props {
     PropertyGroup(PropertyGroup),
     // TO-DO
-    ItemGroup(),
+    ItemGroup,
 }
 
 #[derive(Deserialize, Serialize, PartialEq, Debug)]
@@ -33,6 +33,7 @@ pub enum PGProperties {
     ApplicationDisplayVersion(String),
     ApplicationVersion(String),
     SupportedOSPlatformVersion(String),
+    TargetPlatformMinVersion(String),
 }
 
 // <Project Sdk="Microsoft.NET.Sdk">
