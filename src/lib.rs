@@ -1,19 +1,15 @@
-mod utils;
-
+mod models;
+use quick_xml::{de, DeError};
+use serde_json;
 use wasm_bindgen::prelude::*;
 
-// When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
-// allocator.
-#[cfg(feature = "wee_alloc")]
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
 #[wasm_bindgen]
-extern {
-    fn alert(s: &str);
-}
+pub fn parse_xml(xml: &str, project_type: i32) -> String {
+    let deserialized_model = match project_type {
+        1 => de::from_str::<models::uwp::Project>(xml),
+        _ => Err(DeError::Custom("Unknown Project type".to_string())),
+    };
 
-#[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, xml-parser!");
+    let result = serde_json::to_string(&deserialized_model.unwrap()).unwrap();
+    result
 }
